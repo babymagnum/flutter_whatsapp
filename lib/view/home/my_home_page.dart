@@ -28,6 +28,56 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        onTap: (index) {
+          if (index == 2) Navigator.of(context).pushNamed(CameraView.routeName);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.data_usage, size: 20),
+            title: Text('Status', style: ThemeTextStyle.robotoR.apply(
+              fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.call, size: 20),
+            title: Text('Calls', style: ThemeTextStyle.robotoR.apply(
+              fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt, size: 20),
+            title: Text('Camera', style: ThemeTextStyle.robotoR.apply(
+              fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat, size: 20),
+            title: Text('Chats', style: ThemeTextStyle.robotoR.apply(
+              fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.settings, size: 20),
+            title: Text('Settings', style: ThemeTextStyle.robotoR.apply(
+              fontSizeDelta: -2
+            )),
+          ),
+        ]
+      ),
+      tabBuilder: (context, index) {
+        if (index == 0) return StatusView();
+        else if (index == 1) return CallsView();
+        else if (index == 2) return CameraView();
+        else if (index == 3) return ChatsView();
+        else return SettingsView();
+      }
+    );
+  }
+
+  /*@override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeColor.bg_screen,
       body: IndexedStack(
@@ -80,5 +130,5 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onItemTapped,
       ),
     );
-  }
+  }*/
 }
