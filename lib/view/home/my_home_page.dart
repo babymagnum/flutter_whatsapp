@@ -1,8 +1,12 @@
-import 'package:division/division.dart';
-import 'package:dribbble_clone/core/helper/locator.dart';
-import 'package:dribbble_clone/core/theme/theme_color.dart';
-import 'package:dribbble_clone/stores/base_stores/base_stores.dart';
+import 'package:dribbble_clone/view/calls/calls_view.dart';
+import 'package:dribbble_clone/view/camera/camera_view.dart';
+import 'package:dribbble_clone/view/chats/chats_view.dart';
+import 'package:dribbble_clone/view/settings/settings_view.dart';
+import 'package:dribbble_clone/view/status/status_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../core/theme/theme_color.dart';
+import '../../core/theme/theme_text_style.dart';
 
 class MyHomePage extends StatefulWidget {
 
@@ -14,74 +18,66 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var _baseStores = locator<BaseStores>();
+  int _selectedIndex = 0;
+  bool _hasChat = false, _hasStatus = false, _hasCalls = false;
+
+  _onItemTapped(int index) {
+    if (index == 2) Navigator.of(context).pushNamed(CameraView.routeName);
+    else setState(() => _selectedIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 15),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('HUMMING\nBIRD.', style: TextStyle(color: Colors.black54, fontSize: 20)),
-                    Spacer(),
-                    Parent(
-                      style: ParentStyle()..ripple(true)..borderRadius(all: 5),
-                      child: Text('Episode', style: TextStyle(color: Colors.black54, fontSize: 15))
-                    ),
-                    SizedBox(width: 25,),
-                    Text('About', style: TextStyle(color: Colors.black54, fontSize: 15))
-                  ],
-                ),
-                SizedBox(height: 50),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('FLUTTER WEB.\nTHE BASIC', style: TextStyle(color: Colors.black, fontSize: 40)),
-                          SizedBox(height: 5),
-                          Text('In this course we will go over the basic of using Flutter web for development. Topics will include Responsive Layout, Deploying, Font Changes, Hover functionality, Modals and more.',
-                            style: TextStyle(color: Colors.black87, fontSize: 15),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    Parent(
-                      gesture: Gestures()..onTap(() {
-                        _baseStores.testAction(false);                        
-                      }),
-                      style: ParentStyle()
-                        ..borderRadius(all: 5)
-                        ..background.color(Colors.deepPurpleAccent)
-                        ..ripple(true)
-                        ..padding(all: 10),
-                      child: Text('Join course', style: TextStyle(fontSize: 13, color: Colors.white),),
-                    )
-                  ],
-                ),
-                SizedBox(height: 20),
-                Container(height: 1, color: ThemeColor.lightGrey3),
-                SizedBox(height: 20),
-                Parent(
-                  gesture: Gestures()..onTap(() {}),
-                  child: Text('Signup'),
-                )
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: ThemeColor.bg_screen,
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: <Widget>[
+          StatusView(),
+          CallsView(),
+          CameraView(),
+          ChatsView(),
+          SettingsView()
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: ThemeColor.bg_screen,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.data_usage, size: 20, color: _selectedIndex == 0 ? Colors.lightBlueAccent : Colors.black26,),
+            title: Text('Status', style: ThemeTextStyle.robotoR.apply(
+              color: _selectedIndex == 0 ? Colors.lightBlueAccent : Colors.black26, fontSizeDelta: -2
+            )),
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.call, size: 20, color: _selectedIndex == 1 ? Colors.lightBlueAccent : Colors.black26,),
+            title: Text('Calls', style: ThemeTextStyle.robotoR.apply(
+              color: _selectedIndex == 1 ? Colors.lightBlueAccent : Colors.black26, fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt, size: 20, color: _selectedIndex == 2 ? Colors.lightBlueAccent : Colors.black26,),
+            title: Text('Camera', style: ThemeTextStyle.robotoR.apply(
+              color: _selectedIndex == 2 ? Colors.lightBlueAccent : Colors.black26, fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat, size: 20, color: _selectedIndex == 3 ? Colors.lightBlueAccent : Colors.black26,),
+            title: Text('Chats', style: ThemeTextStyle.robotoR.apply(
+              color: _selectedIndex == 3 ? Colors.lightBlueAccent : Colors.black26, fontSizeDelta: -2
+            )),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.settings, size: 20, color: _selectedIndex == 4 ? Colors.lightBlueAccent : Colors.black26,),
+            title: Text('Settings', style: ThemeTextStyle.robotoR.apply(
+              color: _selectedIndex == 4 ? Colors.lightBlueAccent : Colors.black26, fontSizeDelta: -2
+            )),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.lightBlueAccent,
+        onTap: _onItemTapped,
       ),
     );
   }
